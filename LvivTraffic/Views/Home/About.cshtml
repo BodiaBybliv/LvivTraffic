@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #myImgId{
+            height:350px;
+            margin: 0 auto;
+        }
+        .center-img {
+            text-align: center;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        tr{
+            margin: 0 auto;
+        }
+        .form {
+            width: 350px;
+            margin: 0 auto;
+            padding-top: 20px;
+            padding: 32px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px #ccc;
+            font-family: sans-serif;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+<!--
+        var point2 = false;
+        function FindPosition(oElement) {
+            if (typeof (oElement.offsetParent) != "undefined") {
+                for (var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent) {
+                    posX += oElement.offsetLeft;
+                    posY += oElement.offsetTop;
+                }
+                return [posX, posY];
+            }
+            else {
+                return [oElement.x, oElement.y];
+            }
+        }
+
+        function GetCoordinates(e) {
+
+            var PosX = 0;
+            var PosY = 0;
+            var ImgPos;
+            ImgPos = FindPosition(myImg);
+            if (!e) var e = window.event;
+            if (e.pageX || e.pageY) {
+                PosX = e.pageX;
+                PosY = e.pageY;
+            }
+            else if (e.clientX || e.clientY) {
+                PosX = e.clientX + document.body.scrollLeft
+                    + document.documentElement.scrollLeft;
+                PosY = e.clientY + document.body.scrollTop
+                    + document.documentElement.scrollTop;
+            }
+            PosX = PosX - ImgPos[0];
+            PosY = PosY - ImgPos[1];
+            if (point2 == true) {
+                document.getElementById('X2').value = PosX;
+                document.getElementById('Y2').value = PosY;
+                point2 = false;
+            }
+            else {
+                document.getElementById('X1').value = PosX;
+                document.getElementById('Y1').value = PosY;
+                point2 = true;
+            }
+
+        }
+
+        -->
+    </script>
+    <p class="center-img">
+        <img id="myImgId" alt="" src="~/TempImages/1.bmp" />
+    </p>
+
+
+    <script type="text/javascript">
+<!--
+                        var myImg = document.getElementById("myImgId");
+            myImg.onmousedown = GetCoordinates;
+            //-->
+    </script>
+
+    @*<img src="~/Images/1.bmp" height="300" alt="" id="myImgId" />*@
+    <div id="form_panel" class="form">
+
+        <form method="post" action="/Home/AddLine" style="margin: 0 auto; width:200px">
+            <table>
+                <tr>
+                    <td><label>X:</label></td>
+                    <td><input id="X1" type="text" name="x1" /> </td>
+                </tr>
+                <tr>
+                    <td><label>Y:</label></td>
+                    <td><input id="Y1" type="text" name="y1" /> </td>
+                </tr>
+                <tr>
+                    <td><label>X:</label></td>
+                    <td><input id="X2" type="text" name="x2" /> </td>
+                </tr>
+                <tr>
+                    <td><label>Y:</label></td>
+                    <td><input id="Y2" type="text" name="y2" /> </td>
+                </tr>
+            </table>
+            <div style="margin-top: 10px">
+                <button type="submit" class="btn btn-success" style="width: 70px; margin-left:20px">Submit</button>
+                <button type="reset" class="btn btn-danger" onclick="location.href='@Url.Action("ListCameras", "Home")'" style="width: 70px; margin-left:20px">Cancel</button>
+            </div>
+
+        </form>
+    </div>
+</body>
+</html>
+
+
+
+@*<p>X:<span id="x"></span></p>
+    <p>Y:<span id="y"></span></p>*@

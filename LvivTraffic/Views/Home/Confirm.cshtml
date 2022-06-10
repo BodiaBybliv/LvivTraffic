@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #myImgId {
+            width: 600px;
+            margin: 0 auto;
+        }
+
+        .center-img {
+            text-align: center;
+        }
+        .form {
+            width: 700px;
+            margin: 0 auto;
+            padding-top: 20px;
+            padding: 32px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px #ccc;
+            font-family: sans-serif;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form">
+        <p class="center-img">
+            <img id="myImgId" alt="" src="~/TempImages/line.bmp" />
+        </p>
+        <div id="form_panel">
+            <form method="post" action="/Home/AddNumber" style="margin: 0 auto; width:300px">
+                <table>
+                    <tr>
+                        <td><label>К-сть полос:</label></td>
+                        <td><input id="lines" type="text" name="numberOfLines" /> </td>
+                    </tr>
+                </table>
+                <div style="margin-top: 10px">
+                    <button type="submit" style="width:75px; margin-left:50px" class="btn btn-success">Submit</button>
+                    <button type="reset" style="width: 75px; margin-left:50px" class="btn btn-danger" onclick="location.href='@Url.Action("About", "Home")'">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>
+

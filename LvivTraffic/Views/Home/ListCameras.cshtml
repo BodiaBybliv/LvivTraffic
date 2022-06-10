@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <style>
+        table {
+            width:500px;
+            border-spacing: 0 10px;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: bold;
+            margin: auto;
+            margin-top: 20px;
+            background: #e8edff;
+        }
+
+        .form {
+            width: 504px;
+            margin: 0 auto;
+            /*padding-top: 20px;
+            padding: 32px;*/
+            border-radius: 10px;
+            box-shadow: 0 4px 16px #ccc;
+            font-family: sans-serif;
+            letter-spacing: 1px;
+            background-color:whitesmoke;
+        }
+
+        td {
+            vertical-align: middle;
+            padding-left: 10px;
+            padding-right: 10px;
+            font-size: 14px;
+            text-align: center;
+            border-top: 4px solid #56433D;
+            border-bottom: 4px solid #56433D;
+            /*border-right: 2px solid #56433D;*/
+            /*border-color: dodgerblue;*/
+            border-color: whitesmoke;
+        }
+
+            td:first-child {
+                border-left: 2px solid #56433D;
+                border-right: none;
+                /*border-color: dodgerblue;*/
+                border-color: whitesmoke;
+            }
+
+            td:nth-child(2) {
+                text-align: left;
+            }
+    </style>
+</head>
+<body>
+    <div class="form">
+        <table>
+            @foreach (var c in ViewBag.Cameras)
+            {
+                <tr>
+                    <td style="padding:0px"><img id="myImgId" alt="" src="~/CameraImages/@(c.Name+".bmp")" height="100" width="150"/></td>
+                    <td><h3> @c.Name </h3></td>
+                    <td>
+                        <button class="btn btn-success" onclick="location.href='@Url.Action("SelectCamera", "Home", new { id = c.Id })'">Вибрати</button>
+                    </td>
+
+                </tr>
+            }
+        </table>
+
+    </div>
+</body>
+</html>

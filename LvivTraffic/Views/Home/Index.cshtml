@@ -1,0 +1,165 @@
+﻿<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFlRgp5YKDabXUuNN3I0NdeOimCeYWoqc&callback=initMap"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    @*<meta http-equiv="refresh" content="15">*@
+    <meta charset="utf-8">
+    <style>
+        .markerInfo {
+            height: 300px;
+            width: 300px;
+        }
+
+        #rectangle {
+            width: 260px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #floating-panel {
+            margin-top:10px;
+            width: 1100px;
+            position: page;
+            top: 10px;
+            left: 25%;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
+            text-align: center;
+            font-family: 'Roboto','sans-serif';
+            line-height: 30px;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="floating-panel">
+        <div>
+            <input id="Start" type="text"
+                   placeholder="Початок маршруту">
+            <input id="End" type="text"
+                   placeholder="Кінець маршруту">
+        </div>
+    </div>
+    <div id="map" style="height: 500px; width: 1100px;"></div>
+    @section scripts{
+        <script>
+            $(document).ready(function () {
+                initMap();
+            });
+            function initMap() {
+                var directionsService = new google.maps.DirectionsService();
+                var directionsRenderer = new google.maps.DirectionsRenderer();
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 12,
+                    center: { lat: 49.83, lng: 24.01 }
+                });
+                directionsRenderer.setMap(map);
+                var infowindow = new google.maps.InfoWindow();
+                var onChangeHandler = function () {
+                    calculateAndDisplayRoute(directionsService, directionsRenderer);
+                };
+                document.getElementById('Start').addEventListener('change', onChangeHandler);
+                document.getElementById('End').addEventListener('change', onChangeHandler);
+                $.getJSON('@Url.Action("GetData","Home")', function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(data[i].Latitude, data[i].Longitude),
+                            map: map
+                        });
+                        //marker.setIcon('https://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+                        marker.setIcon('https://maps.google.com/mapfiles/ms/icons/' + data[i].Color + '.png');
+                        
+                        var details = "<div class='markerInfo'><div><img id='myImgId' alt='' src='/Images/" + data[i].Name + "line.bmp' height='200' width='270'/><div><h5>Кількість автомобілів: " + data[i].CarCount + "</h5></div><div><h5>" + data[i].Description + "</h5></div><div><h5>" + data[i].Message + "</h5></div> </div></div>";
+                        //var details = "<div class='markerInfo'><div><img src="+"<%: Url.Action('ShowImage', 'Home', new { id = data[i].Id }) %>'/><div><h5>Кількість автомобілів: " + data[i].CarCount + "</h5></div><div><h5>" + data[i].Description + "</h5></div><div><h5>" + data[i].Message + "</h5></div> </div></div>";
+
+                        //var details = "<div class='markerInfo'><div><h5>Кількість автомобілів: " + data[i].CarCount + "</h5></div><div><h5>" + data[i].Description + "</h5></div><div><h5>" + data[i].Message + "</h5></div><div><img id='myImgId' alt='' src='/Images/" + data[i].Name + "line.bmp' height='100' /></div></div>";
+
+                        //infowindow.setContent(details);
+
+                        bindInfoWindow(marker, map, infowindow, details);
+
+                        //var infowindow = new google.maps.InfoWindow({
+                        //    content: "<div class='markerInfo'><h2>Cars: " + data[i].CountCars + "</h2><div><h2>Coef: "
+                        //        + data[i].Congestion + "</h2></div></div>"
+                        //});
+                        ////marker.addListener('click', function () {
+                        ////    infowindow.open(map, marker);
+                        ////});
+                        //google.maps.event.addListener(marker, 'click', function () {
+                        //    infowindow.open(map, marker);
+                        //});
+                    }
+                    function bindInfoWindow(marker, map, infowindow, strDescription) {
+                        google.maps.event.addListener(marker, 'click', function () {
+                            infowindow.setContent(strDescription);
+                            infowindow.open(map, marker);
+                        });
+                    }
+                });
+            }
+
+            function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+                directionsService.route(
+                    {
+                        origin: { query: document.getElementById('Start').value },
+                        destination: { query: document.getElementById('End').value },
+                        travelMode: 'DRIVING'
+                    },
+                    function (response, status) {
+                        if (status === 'OK') {
+                            directionsRenderer.setDirections(response);
+                        } else {
+                            window.alert('Directions request failed due to ' + status);
+                        }
+                    });
+            }
+
+        </script>
+    }
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@{
+        ViewBag.Title = "Home Page";
+    }*@
+
+@*<!DOCTYPE html>
+
+    <html>
+    <body>
+        <div>
+            <table>
+                @foreach (var c in ViewBag.Cameras)
+                {
+                    <tr>
+                        <td><h3> @c.Name </h3></td>
+                        <td>
+                            <button class="btn btn-success" onclick="location.href='@Url.Action("SelectCamera", "Home", new { id = c.Id })'">Вибрати</button>
+                        </td>
+
+                    </tr>
+                }
+            </table>
+
+        </div>
+    </body>
+    </html>*@

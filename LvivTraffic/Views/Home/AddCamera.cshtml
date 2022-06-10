@@ -1,0 +1,114 @@
+﻿<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFlRgp5YKDabXUuNN3I0NdeOimCeYWoqc&callback=initMap"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        .markerInfo {
+            height: 300px;
+            width: 300px;
+        }
+
+        #rectangle {
+            width: 260px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #floating-panel {
+            margin-top: 10px;
+            width: 1100px;
+            position: page;
+            top: 10px;
+            left: 25%;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
+            text-align: center;
+            font-family: 'Roboto','sans-serif';
+            line-height: 30px;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="floating-panel">
+        <form method="post" action="/Home/AddCameraToMap">
+            <b>Широта: </b>
+            <input id="Latitude" name="Latitude" />
+            <b>Довгота: </b>
+            <input id="Longitude" name="Longitude" />
+            <b>Вулиця: </b>
+            <input id="Street" name="Street" />
+            <input type="submit" name="submit" class="btn btn-primary">
+        </form>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div id="canvas" style="height: 500px; width:1100px;">
+                @section scripts {
+                    <script type="text/javascript">
+                    $(document).ready(function () {
+                        initMap();
+                    });
+                    function initMap() {
+                        google.maps.visualRefresh = true;
+
+                        var Lviv = new google.maps.LatLng("49.83", "24.01");
+
+                        var mapOptions = {
+                            zoom: 12,
+                            center: Lviv,
+                            mapTypeId: google.maps.MapTypeId.G_NORMAL_MAP
+                        };
+                        var infowindow = new google.maps.InfoWindow();
+
+                        var map = new google.maps.Map(document.getElementById("canvas"), mapOptions);
+                        map.addListener('click', function (e) {
+                            placeMarker(e.latLng, map);
+                        });
+                        function placeMarker(position, map) {
+                            var marker = new google.maps.Marker({
+                                position: position,
+                                map: map
+                            })
+                            map.panTo(position);
+                            document.getElementById('Latitude').value = position.lat();
+                            document.getElementById('Longitude').value = position.lng();
+                        }
+
+                        $.getJSON('@Url.Action("GetData","Home")', function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                var marker = new google.maps.Marker({
+                                    position: new google.maps.LatLng(data[i].Latitude, data[i].Longitude),
+                                    map: map
+                                });
+                                marker.setIcon('https://maps.google.com/mapfiles/ms/icons/' + data[i].Color + '.png');
+                                //marker.setIcon('https://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+                                var details = "<div class='markerInfo'><div><img id='myImgId' alt='' src='/Images/" + data[i].Name + "line.bmp' height='200' width='270' /><div><h5>Кількість автомобілів: " + data[i].CarCount + "</h5></div><div><h5>" + data[i].Description + "</h5></div><div><h5>" + data[i].Message + "</h5></div> </div></div>";
+
+                                //var details = "<div class='markerInfo'><div><h5>Кількість автомобілів: " + data[i].CarCount + "</h5></div><div><img id='myImgId' alt='' src='/Images/" + data[i].Name + "line.bmp' height='100' /></div></div>";
+                                //infowindow.setContent(details);
+
+                                bindInfoWindow(marker, map, infowindow, details);
+
+                            }
+                            function bindInfoWindow(marker, map, infowindow, strDescription) {
+                                google.maps.event.addListener(marker, 'click', function () {
+                                    infowindow.setContent(strDescription);
+                                    infowindow.open(map, marker);
+                                });
+                            }
+                        });
+                    }
+                    </script>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>
